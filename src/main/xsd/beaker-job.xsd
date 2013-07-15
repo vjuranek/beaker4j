@@ -1,0 +1,857 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim: set sw=2: -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <xs:element name="results">
+  	<xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="result"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="result">
+    <xs:complexType>
+      <xs:attribute name="id" use="required"/>
+      <xs:attribute name="path" use="required"/>
+      <xs:attribute name="result" use="required"/>
+      <xs:attribute name="score" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="job">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="notify"/>
+        <xs:element ref="whiteboard"/>
+        <xs:element ref="recipeSet"/>
+      </xs:choice>
+      <xs:attribute name="retention_tag"/>
+      <xs:attribute name="product"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="whiteboard" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>
+              A textual description of this job, for human consumption only.
+            </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="recipeSet">
+    <xs:annotation>
+      <xs:documentation>
+              A recipeset defines one or more recipes which are to be run in 
+              parallel. Define multiple recipes within a recipeset for 
+              multihost testing. Otherwise, define only one recipe within the 
+              recipeset.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="recipe"/>
+      </xs:sequence>
+      <xs:attribute name="priority"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="notify">
+    <xs:annotation>
+      <xs:documentation>
+        This element is a container for configurating notifications that this 
+        job has finished running.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="cc"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cc" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>
+            An e-mail address which will be cc'ed on the job completion e-mail.
+          </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="recipe">
+    <xs:annotation>
+      <xs:documentation>
+        A recipe is a sequence of tasks which are run on a single system,
+        in parallel with any other recipes in the same recipeset.
+        The system is always provisioned with an operating system at the start 
+        of each recipe. Options for provisioning are contained within this 
+        element.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="guestrecipe"/>
+        <xs:group ref="recipe_contents"/>
+      </xs:choice>
+      <xs:attributeGroup ref="recipe_contents"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="guestrecipe">
+    <xs:complexType>
+      <xs:group ref="recipe_contents"/>
+      <xs:attribute name="guestname" use="required"/>
+      <xs:attribute name="guestargs" use="required"/>
+      <xs:attributeGroup ref="recipe_contents"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="recipe_contents">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="autopick"/>
+        <xs:element ref="kickstart"/>
+        <xs:element ref="watchdog"/>
+        <xs:element ref="packages"/>
+        <xs:element ref="ks_appends"/>
+        <xs:element ref="repos"/>
+        <xs:element ref="distroRequires"/>
+        <xs:element ref="hostRequires"/>
+        <xs:element ref="partitions"/>
+        <xs:element ref="task"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="kickstart" type="xs:string"/>
+  <xs:element name="distroRequires">
+    <xs:annotation>
+      <xs:documentation>
+          This element is a container for expressing contraints on the 
+          operating system distribution which will be selected and 
+          provisioned at the start of this recipe.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="distroreq"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hostRequires">
+    <xs:annotation>
+      <xs:documentation>
+          This element is a container for expressing contraints on the 
+          system which will be selected to run this recipe.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="hostreq"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="recipe_contents">
+    <xs:attribute name="kernel_options"/>
+    <xs:attribute name="kernel_options_post"/>
+    <xs:attribute name="ks_meta"/>
+    <xs:attribute name="role"/>
+    <xs:attribute name="whiteboard">
+      <xs:annotation>
+        <xs:documentation>
+            A textual description of this recipe, for human consumption only.
+          </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:element name="autopick">
+    <xs:complexType>
+      <xs:attribute name="random">
+        <xs:simpleType>
+          <xs:union memberTypes="xs:boolean">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="TRUE"/>
+              </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="FALSE"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:union>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="watchdog">
+    <xs:complexType>
+      <xs:attribute name="panic">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="ignore"/>
+            <xs:enumeration value="None"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ks_appends">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ks_append"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ks_append" type="xs:string"/>
+  <xs:element name="packages">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="package"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="package">
+    <xs:complexType>
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="repos">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="repo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="repo">
+    <xs:complexType>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="url" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="partitions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="partition"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="partition">
+    <xs:complexType>
+      <xs:attribute name="fs">
+        <xs:annotation>
+          <xs:documentation>
+                Type of filesystem to be created on this partition. Defaults to 
+                'ext3' if not specified.
+              </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="type"/>
+      <xs:attribute name="size" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="task">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="params"/>
+        <xs:element minOccurs="0" ref="results"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required"/>
+      <xs:attribute name="avg_time" />
+      <xs:attribute name="duration" />
+      <xs:attribute name="result" />
+      <xs:attribute name="status" />
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="role"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="params">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="param"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="param">
+    <xs:complexType>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="distroreq">
+    <xs:choice>
+      <xs:element name="and">
+        <xs:complexType>
+          <xs:group minOccurs="0" maxOccurs="unbounded" ref="distroreq"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="or">
+        <xs:complexType>
+          <xs:group minOccurs="0" maxOccurs="unbounded" ref="distroreq"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="distro_family"/>
+      <xs:element name="family">
+        <xs:complexType>
+          <xs:attributeGroup ref="req"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="distro_name"/>
+      <xs:element name="name">
+        <xs:complexType>
+          <xs:attributeGroup ref="req"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="distro_tag"/>
+      <xs:element ref="tag"/>
+      <xs:element ref="distro_variant"/>
+      <xs:element ref="variant"/>
+      <xs:element ref="distro_arch"/>
+      <xs:element name="arch">
+        <xs:complexType>
+          <xs:attributeGroup ref="req"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="distro_virt"/>
+      <xs:element ref="distro_method"/>
+      <xs:element ref="method"/>
+      <xs:element ref="distrolabcontroller"/>
+      <xs:element ref="labcontroller"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="distro_family">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;family&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="distro_name">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;name&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="distro_tag">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;tag&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tag">
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="distro_variant">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;variant&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="variant">
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="distro_arch">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;arch&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="distro_virt">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="distro_method">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;method&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="method">
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="distrolabcontroller">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;labcontroller&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="labcontroller">
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="hostreq">
+    <xs:choice>
+      <xs:element name="and">
+        <xs:complexType>
+          <xs:group minOccurs="0" maxOccurs="unbounded" ref="hostreq"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="or">
+        <xs:complexType>
+          <xs:group minOccurs="0" maxOccurs="unbounded" ref="hostreq"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="host"/>
+      <xs:element ref="labcontroller"/>
+      <xs:element ref="hostlabcontroller"/>
+      <xs:element ref="system_type"/>
+      <xs:element name="memory">
+        <xs:annotation>
+          <xs:documentation>
+          Deprecated.  Use &lt;system&gt;&lt;memory&gt; instead.
+        </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attributeGroup ref="req"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="cpu_count"/>
+      <xs:element ref="numa_node_count"/>
+      <xs:element ref="hostname"/>
+      <xs:element name="arch">
+        <xs:annotation>
+          <xs:documentation>
+          Deprecated.  Use &lt;system&gt;&lt;arch&gt; instead.
+        </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attributeGroup ref="req"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="auto_prov"/>
+      <xs:element name="hypervisor">
+        <xs:annotation>
+          <xs:documentation>
+          Deprecated.  Use &lt;system&gt;&lt;hypervisor&gt; instead.
+        </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attributeGroup ref="req"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="device"/>
+      <xs:element ref="group"/>
+      <xs:element ref="key_value"/>
+      <xs:element ref="cpu"/>
+      <xs:element ref="system"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="host">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;system&gt;&lt;name&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hostlabcontroller">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;labcontroller&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="system_type">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;system&gt;&lt;type&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cpu_count">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;cpu&gt;&lt;processors&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="numa_node_count">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;system&gt;&lt;numanodes&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hostname">
+    <xs:annotation>
+      <xs:documentation>
+          Deprecated.  Use &lt;system&gt;&lt;name&gt; instead.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="auto_prov">
+    <xs:complexType>
+      <xs:attributeGroup ref="req"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="device">
+    <xs:annotation>
+      <xs:documentation>
+          Selects systems by device. If operator is ==, selects systems which
+          have at least one matching device. If operator is !=, selects systems
+          which have no matching devices.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="op">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="!="/>
+            <xs:enumeration value="like"/>
+            <xs:enumeration value="=="/>
+            <xs:enumeration value="="/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="type"/>
+      <xs:attribute name="bus"/>
+      <xs:attribute name="driver"/>
+      <xs:attribute name="vendor_id"/>
+      <xs:attribute name="device_id"/>
+      <xs:attribute name="subsys_vendor_id"/>
+      <xs:attribute name="subsys_device_id"/>
+      <xs:attribute name="description"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="group">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="key_value">
+    <xs:complexType>
+      <xs:attribute name="key" use="required"/>
+      <xs:attributeGroup ref="op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cpu">
+    <xs:complexType>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="cpureq"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="system">
+    <xs:complexType>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="systemreq"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="cpureq">
+    <xs:choice>
+      <xs:element name="and">
+        <xs:complexType>
+          <xs:group minOccurs="0" maxOccurs="unbounded" ref="cpureq"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="or">
+        <xs:complexType>
+          <xs:group minOccurs="0" maxOccurs="unbounded" ref="cpureq"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="cores"/>
+      <xs:element name="family">
+        <xs:complexType>
+          <xs:attributeGroup ref="op"/>
+          <xs:attribute name="value" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="hyper"/>
+      <xs:element name="model">
+        <xs:complexType>
+          <xs:attributeGroup ref="op"/>
+          <xs:attribute name="value" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="model_name"/>
+      <xs:element ref="processors"/>
+      <xs:element ref="sockets"/>
+      <xs:element ref="speed"/>
+      <xs:element ref="stepping"/>
+      <xs:element ref="vendor"/>
+      <xs:element ref="flag"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="cores">
+    <xs:complexType>
+      <xs:attributeGroup ref="op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hyper">
+    <xs:complexType>
+      <xs:attributeGroup ref="boolean_value"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="model_name">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="processors">
+    <xs:complexType>
+      <xs:attributeGroup ref="op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sockets">
+    <xs:complexType>
+      <xs:attributeGroup ref="op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="speed">
+    <xs:complexType>
+      <xs:attributeGroup ref="op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="stepping">
+    <xs:complexType>
+      <xs:attributeGroup ref="op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="vendor">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="flag">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="systemreq">
+    <xs:choice>
+      <xs:element name="and">
+        <xs:complexType>
+          <xs:group minOccurs="0" maxOccurs="unbounded" ref="systemreq"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="or">
+        <xs:complexType>
+          <xs:group minOccurs="0" maxOccurs="unbounded" ref="systemreq"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="name">
+        <xs:complexType>
+          <xs:attributeGroup ref="equality_op"/>
+          <xs:attribute name="value" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="lender"/>
+      <xs:element name="model">
+        <xs:complexType>
+          <xs:attributeGroup ref="equality_op"/>
+          <xs:attribute name="value" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="vendor"/>
+      <xs:element ref="added"/>
+      <xs:element name="arch">
+        <xs:complexType>
+          <xs:attributeGroup ref="equality_op"/>
+          <xs:attribute name="value" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="memory">
+        <xs:complexType>
+          <xs:attributeGroup ref="op"/>
+          <xs:attribute name="value" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="numanodes"/>
+      <xs:element ref="owner"/>
+      <xs:element ref="user"/>
+      <xs:element ref="loaned"/>
+      <xs:element ref="location"/>
+      <xs:element ref="powertype"/>
+      <xs:element ref="serial"/>
+      <xs:element name="hypervisor">
+        <xs:complexType>
+          <xs:attributeGroup ref="equality_op"/>
+          <xs:attribute name="value" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="status"/>
+      <xs:element ref="type"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="lender">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="added">
+    <xs:complexType>
+      <xs:attributeGroup ref="op"/>
+      <xs:attribute name="value" use="required" type="xs:date"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="numanodes">
+    <xs:complexType>
+      <xs:attributeGroup ref="op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="owner">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="user">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="loaned">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="location">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="powertype">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="serial">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="status">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="type">
+    <xs:complexType>
+      <xs:attributeGroup ref="equality_op"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="req">
+    <xs:attribute name="op">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="!="/>
+          <xs:enumeration value="like"/>
+          <xs:enumeration value="=="/>
+          <xs:enumeration value="="/>
+          <xs:enumeration value="&lt;="/>
+          <xs:enumeration value="&lt;"/>
+          <xs:enumeration value="&gt;="/>
+          <xs:enumeration value="&gt;"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="value" use="required"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="op">
+    <xs:attribute name="op" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="!="/>
+          <xs:enumeration value="like"/>
+          <xs:enumeration value="=="/>
+          <xs:enumeration value="="/>
+          <xs:enumeration value="&lt;="/>
+          <xs:enumeration value="&lt;"/>
+          <xs:enumeration value="&gt;="/>
+          <xs:enumeration value="&gt;"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="equality_op">
+    <xs:attribute name="op" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="!="/>
+          <xs:enumeration value="like"/>
+          <xs:enumeration value="=="/>
+          <xs:enumeration value="="/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="boolean_value">
+    <xs:attribute name="value" use="required">
+      <xs:simpleType>
+        <xs:union memberTypes="xs:boolean">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="TRUE"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="FALSE"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+</xs:schema>

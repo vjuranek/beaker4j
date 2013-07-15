@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim: set sw=2: -->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+         xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+  <start>
+    <ref name="job"/>
+  </start>
+  <define name="job">
+    <element name="job">
+      <interleave>
+        <optional>
+          <attribute name="retention_tag"/>
+        </optional>
+        <optional>
+          <attribute name="product"/>
+        </optional>
+        <optional>
+          <ref name="notify"/>
+        </optional>
+        <optional>
+          <element name="whiteboard">
+            <a:documentation xml:lang="en">
+              A textual description of this job, for human consumption only.
+            </a:documentation>
+            <text/>
+          </element>
+        </optional>
+        <oneOrMore>
+          <element name="recipeSet">
+            <a:documentation xml:lang="en">
+              A recipeset defines one or more recipes which are to be run in 
+              parallel. Define multiple recipes within a recipeset for 
+              multihost testing. Otherwise, define only one recipe within the 
+              recipeset.
+            </a:documentation>
+            <optional>
+              <attribute name="priority"/>
+            </optional>
+            <oneOrMore>
+              <ref name="recipe"/>
+            </oneOrMore>
+          </element>
+        </oneOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="notify">
+    <element name="notify">
+      <a:documentation xml:lang="en">
+        This element is a container for configurating notifications that this 
+        job has finished running.
+      </a:documentation>
+      <zeroOrMore>
+        <element name="cc">
+          <a:documentation xml:lang="en">
+            An e-mail address which will be cc'ed on the job completion e-mail.
+          </a:documentation>
+          <text/>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="recipe">
+    <element name="recipe">
+      <a:documentation xml:lang="en">
+        A recipe is a sequence of tasks which are run on a single system,
+        in parallel with any other recipes in the same recipeset.
+        The system is always provisioned with an operating system at the start 
+        of each recipe. Options for provisioning are contained within this 
+        element.
+      </a:documentation>
+      <interleave>
+        <zeroOrMore>
+          <element name="guestrecipe">
+            <interleave>
+              <attribute name="guestname" />
+              <attribute name="guestargs" />
+              <ref name="recipe_contents" />
+            </interleave>
+          </element>
+        </zeroOrMore>
+        <ref name="recipe_contents" />
+      </interleave>
+    </element>
+  </define>
+  <define name="recipe_contents">
+    <!-- stuff which is common to both <recipe/> and <guestrecipe/> -->
+    <interleave>
+      <optional>
+        <attribute name="kernel_options"/>
+      </optional>
+      <optional>
+        <attribute name="kernel_options_post"/>
+      </optional>
+      <optional>
+        <attribute name="ks_meta"/>
+      </optional>
+      <optional>
+        <attribute name="role"/>
+      </optional>
+      <optional>
+        <attribute name="whiteboard">
+          <a:documentation xml:lang="en">
+            A textual description of this recipe, for human consumption only.
+          </a:documentation>
+          <text/>
+        </attribute>
+      </optional>
+      <optional>
+        <ref name="autopick"/>
+      </optional>
+      <optional>
+        <element name="kickstart"><text/></element>
+      </optional>
+      <optional>
+        <ref name="watchdog"/>
+      </optional>
+      <optional>
+        <ref name="packages"/>
+      </optional>
+      <optional>
+        <ref name="ks_appends"/>
+      </optional>
+      <optional>
+        <ref name="repos"/>
+      </optional>
+      <element name="distroRequires">
+        <a:documentation xml:lang="en">
+          This element is a container for expressing contraints on the 
+          operating system distribution which will be selected and 
+          provisioned at the start of this recipe.
+        </a:documentation>
+        <zeroOrMore><ref name="distroreq"/></zeroOrMore>
+      </element>
+      <element name="hostRequires">
+        <a:documentation xml:lang="en">
+          This element is a container for expressing contraints on the 
+          system which will be selected to run this recipe.
+        </a:documentation>
+        <zeroOrMore><ref name="hostreq"/></zeroOrMore>
+      </element>
+      <optional>
+        <ref name="partitions"/>
+      </optional>
+      <oneOrMore>
+        <ref name="task"/>
+      </oneOrMore>
+    </interleave>
+  </define>
+  <define name="autopick">
+    <element name="autopick">
+      <optional>
+        <attribute name="random">
+          <choice>
+            <data type="boolean"/>
+            <value>TRUE</value>
+            <value>FALSE</value>
+          </choice>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <define name="watchdog">
+    <element name="watchdog">
+      <optional>
+        <attribute name="panic">
+          <choice>
+            <value>ignore</value>
+            <value>None</value>
+          </choice>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+  <define name="ks_appends">
+    <element name="ks_appends">
+     <zeroOrMore>
+       <element name="ks_append"><text/></element>
+     </zeroOrMore>
+    </element>
+  </define> 
+  <define name="packages">
+    <element name="packages">
+      <zeroOrMore>
+        <element name="package">
+          <attribute name="name"/>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="repos">
+    <element name="repos">
+      <zeroOrMore>
+        <element name="repo">
+          <attribute name="name"/>
+          <attribute name="url"/>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="partitions">
+    <element name="partitions">
+      <zeroOrMore>
+        <element name="partition">
+          <optional>
+            <attribute name="fs">
+              <a:documentation xml:lang="en">
+                Type of filesystem to be created on this partition. Defaults to 
+                'ext3' if not specified.
+              </a:documentation>
+              <text/>
+            </attribute>
+          </optional>
+          <attribute name="name"/>
+          <optional>
+            <attribute name="type"/>
+          </optional>
+          <attribute name="size">
+            <data type="integer"/>
+          </attribute>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="task">
+    <element name="task">
+      <attribute name="name"/>
+      <optional>
+        <attribute name="role"/>
+      </optional>
+      <optional>
+        <element name="params">
+          <zeroOrMore>
+            <element name="param">
+              <attribute name="name"/>
+              <attribute name="value"/>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
+    </element>
+  </define>
+  <define name="distroreq">
+    <choice>
+      <element name="and">
+        <zeroOrMore><ref name="distroreq"/></zeroOrMore>
+      </element>
+      <element name="or">
+        <zeroOrMore><ref name="distroreq"/></zeroOrMore>
+      </element>
+      <element name="distro_family">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;family&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="family"><ref name="req"/></element>
+      <element name="distro_name">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;name&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="name"><ref name="req"/></element>
+      <element name="distro_tag">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;tag&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="tag"><ref name="req"/></element>
+      <element name="distro_variant">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;variant&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="variant"><ref name="req"/></element>
+      <element name="distro_arch">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;arch&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="arch"><ref name="req"/></element>
+      <element name="distro_virt">
+        <a:documentation xml:lang="en">
+          Deprecated.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="distro_method">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;method&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="method"><ref name="req"/></element>
+      <element name="distrolabcontroller">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;labcontroller&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="labcontroller"><ref name="req"/></element>
+    </choice>
+  </define>
+  <define name="hostreq">
+    <choice>
+      <element name="and">
+        <zeroOrMore><ref name="hostreq"/></zeroOrMore>
+      </element>
+      <element name="or">
+        <zeroOrMore><ref name="hostreq"/></zeroOrMore>
+      </element>
+      <element name="host">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;system&gt;&lt;name&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="labcontroller"><ref name="req"/></element>
+      <element name="hostlabcontroller">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;labcontroller&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="system_type">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;system&gt;&lt;type&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="memory">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;system&gt;&lt;memory&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="cpu_count">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;cpu&gt;&lt;processors&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="numa_node_count">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;system&gt;&lt;numanodes&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="hostname">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;system&gt;&lt;name&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="arch">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;system&gt;&lt;arch&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="auto_prov"><ref name="req"/></element>
+      <element name="hypervisor">
+        <a:documentation xml:lang="en">
+          Deprecated.  Use &lt;system&gt;&lt;hypervisor&gt; instead.
+        </a:documentation>
+        <ref name="req"/>
+      </element>
+      <element name="device">
+        <a:documentation xml:lang="en">
+          Selects systems by device. If operator is ==, selects systems which
+          have at least one matching device. If operator is !=, selects systems
+          which have no matching devices.
+        </a:documentation>
+        <optional>
+          <ref name="equality_op" />
+        </optional>
+        <oneOrMore>
+          <choice>
+            <attribute name="type" />
+            <attribute name="bus" />
+            <attribute name="driver" />
+            <attribute name="vendor_id" />
+            <attribute name="device_id" />
+            <attribute name="subsys_vendor_id" />
+            <attribute name="subsys_device_id" />
+            <attribute name="description" />
+          </choice>
+        </oneOrMore>
+      </element>
+      <element name="group">
+        <ref name="equality_op" />
+        <attribute name="value" />
+      </element>
+      <element name="key_value">
+        <attribute name="key" />
+        <ref name="op"/>
+        <attribute name="value" />
+      </element>
+      <element name="cpu">
+       <zeroOrMore><ref name="cpureq"/></zeroOrMore>
+      </element>
+      <element name="system">
+       <zeroOrMore><ref name="systemreq"/></zeroOrMore>
+      </element>
+    </choice>
+  </define>
+  <define name="cpureq">
+   <choice>
+    <element name="and">
+      <zeroOrMore><ref name="cpureq"/></zeroOrMore>
+    </element>
+    <element name="or">
+      <zeroOrMore><ref name="cpureq"/></zeroOrMore>
+    </element>
+    <element name="cores">
+      <ref name="op" />
+      <attribute name="value" />
+    </element>
+    <element name="family">
+      <ref name="op" />
+      <attribute name="value" />
+    </element>
+    <element name="hyper">
+      <ref name="boolean_value"/>
+    </element>
+    <element name="model">
+      <ref name="op" />
+      <attribute name="value" />
+    </element>
+    <element name="model_name">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="processors">
+      <ref name="op" />
+      <attribute name="value" />
+    </element>
+    <element name="sockets">
+      <ref name="op" />
+      <attribute name="value" />
+    </element>
+    <element name="speed">
+      <ref name="op" />
+      <attribute name="value" />
+    </element>
+    <element name="stepping">
+      <ref name="op" />
+      <attribute name="value" />
+    </element>
+    <element name="vendor">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="flag">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+   </choice>
+  </define>
+  <define name="systemreq">
+   <choice>
+    <element name="and">
+      <zeroOrMore><ref name="systemreq"/></zeroOrMore>
+    </element>
+    <element name="or">
+      <zeroOrMore><ref name="systemreq"/></zeroOrMore>
+    </element>
+    <element name="name">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="lender">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="model">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="vendor">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="added">
+      <ref name="op" />
+      <attribute name="value">
+        <data type="date"/>
+      </attribute>
+    </element>
+    <element name="arch">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="memory">
+      <ref name="op" />
+      <attribute name="value" />
+    </element>
+    <element name="numanodes">
+      <ref name="op" />
+      <attribute name="value" />
+    </element>
+    <element name="owner">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="user">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="loaned">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="location">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="powertype">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="serial">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="hypervisor">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="status">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+    <element name="type">
+      <ref name="equality_op" />
+      <attribute name="value" />
+    </element>
+   </choice>
+  </define>
+  <define name="req">
+    <optional>
+      <ref name="op"/>
+    </optional>
+    <attribute name="value" />
+  </define>
+  <define name="op">
+    <attribute name="op">
+      <choice>
+        <value>!=</value>
+        <value>like</value>
+        <value>==</value>
+        <value>=</value>
+        <value>&lt;=</value>
+        <value>&lt;</value>
+        <value>&gt;=</value>
+        <value>&gt;</value>
+      </choice>
+    </attribute>
+  </define>
+  <define name="equality_op">
+   <attribute name="op">
+    <choice>
+        <value>!=</value>
+        <value>like</value>
+        <value>==</value>
+        <value>=</value>
+    </choice>
+   </attribute>
+  </define>
+  <define name="boolean_value">
+   <attribute name="value">
+    <choice>
+        <data type="boolean"/>
+        <value>TRUE</value>
+        <value>FALSE</value>
+    </choice>
+   </attribute>
+  </define>
+</grammar>

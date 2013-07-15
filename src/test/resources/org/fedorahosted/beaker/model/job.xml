@@ -1,0 +1,74 @@
+<job id="31209" owner="vjuranek@redhat.com" result="Warn"
+	retention_tag="scratch" status="Completed">
+	<whiteboard>Hudson test</whiteboard>
+	<recipeSet id="52841" priority="Normal">
+		<recipe arch="x86_64" distro="RHEL-6.0" duration="6:31:34"
+			family="RedHatEnterpriseLinux6" id="61713" job_id="31209"
+			kernel_options="" kernel_options_post="" ks_meta="" recipe_set_id="52841"
+			result="Warn" role="RECIPE_MEMBERS" status="Completed"
+			system="dell-per300-01" variant="Client"
+			whiteboard="">
+			<autopick random="false" />
+			<watchdog panic="None" />
+			<packages>
+				<package name="java-1.6.0-openjdk" />
+			</packages>
+			<ks_appends />
+			<roles>
+				<role value="RECIPE_MEMBERS">
+					<system value="dell-per300-01" />
+				</role>
+			</roles>
+			<repos />
+			<distroRequires>
+				<and>
+					<distro_variant op="=" value="" />
+					<distro_arch op="=" value="x86_64" />
+					<distro_virt op="=" value="" />
+					<distro_family op="=" value="RedHatEnterpriseLinux6" />
+					<distro_method op="=" value="nfs" />
+				</and>
+			</distroRequires>
+			<hostRequires>
+				<system_type value="Machine" />
+			</hostRequires>
+			<partitions />
+			<task avg_time="1200" duration="0:11:41" id="687990"
+				name="/distribution/install" result="Pass" role="STANDALONE" status="Completed">
+				<rpm name="beaker-distribution-install" path="/mnt/tests/distribution/install" />
+				<roles>
+					<role value="STANDALONE">
+						<system value="dell-per300-01" />
+					</role>
+				</roles>
+				<params />
+				<results>
+					<result id="2138727" path="/start" result="Pass" score="0.00">Install
+						Started</result>
+					<result id="2138844" path="/distribution/install" result="Pass"
+						score="449.00">(Pass)</result>
+					<result id="2138845" path="/distribution/install/Sysinfo"
+						result="Pass" score="10001000.00">(Pass)</result>
+				</results>
+			</task>
+			<task avg_time="86400" duration="6:19:52" id="687991"
+				name="/distribution/reservesys" result="Warn" role="STANDALONE"
+				status="Cancelled">
+				<rpm name="beaker-distribution-reservesys" path="/mnt/tests/distribution/reservesys" />
+				<roles>
+					<role value="STANDALONE">
+						<system value="dell-per300-01" />
+					</role>
+				</roles>
+				<params />
+				<results>
+					<result id="2138849" path="/distribution/reservesys" result="Pass"
+						score="0.00">(Pass)</result>
+					<result id="2138850" path="rhts_task/exit" result="Pass"
+						score="143.00">rhts-test-runner.sh exited with rc=143</result>
+					<result id="2147768" path="/" result="Warn" score="0.00"></result>
+				</results>
+			</task>
+		</recipe>
+	</recipeSet>
+</job>
