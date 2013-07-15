@@ -1,4 +1,4 @@
-package org.fedorahosted.beaker.remote_model;
+package org.fedorahosted.beaker4j.remote_model;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
@@ -8,9 +8,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.xmlrpc.XmlRpcException;
-import org.fedorahosted.beaker.client.BeakerClient;
-import org.fedorahosted.beaker.model.Job;
-import org.fedorahosted.beaker.xmlrpc.client.XmlRpcApi;
+import org.fedorahosted.beaker4j.client.BeakerClient;
+import org.fedorahosted.beaker4j.model.Job;
+import org.fedorahosted.beaker4j.xmlrpc.client.XmlRpcApi;
 
 public class BeakerJob extends RemoteBeakerObject {
     

@@ -1,4 +1,4 @@
-package org.fedorahosted.beaker.xmlrpc.client;
+package org.fedorahosted.beaker4j.xmlrpc.client;
 
 /**
  * Lists Beaker XML-RPC API

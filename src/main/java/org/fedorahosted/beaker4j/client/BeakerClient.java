@@ -1,7 +1,7 @@
-package org.fedorahosted.beaker.client;
+package org.fedorahosted.beaker4j.client;
 
 import org.apache.xmlrpc.XmlRpcException;
-import org.fedorahosted.beaker.xmlrpc.client.XmlRpcApi;
+import org.fedorahosted.beaker4j.xmlrpc.client.XmlRpcApi;
 
 public interface BeakerClient {
     

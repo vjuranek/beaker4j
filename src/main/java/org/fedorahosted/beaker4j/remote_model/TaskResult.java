@@ -1,4 +1,4 @@
-package org.fedorahosted.beaker.remote_model;
+package org.fedorahosted.beaker4j.remote_model;
 
 /**
  * See TaskResult class in <a href="https://github.com/beaker-project/beaker/blob/develop/Server/bkr/server/model.py">model.py</a>

@@ -1,4 +1,4 @@
-package org.fedorahosted.beaker.remote_model;
+package org.fedorahosted.beaker4j.remote_model;
 
 
 /**

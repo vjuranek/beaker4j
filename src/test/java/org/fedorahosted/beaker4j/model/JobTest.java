@@ -1,4 +1,4 @@
-package org.fedorahosted.beaker.model;
+package org.fedorahosted.beaker4j.model;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -8,11 +8,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.fedorahosted.beaker.model.Job;
-import org.fedorahosted.beaker.model.Recipe;
-import org.fedorahosted.beaker.model.RecipeSet;
-import org.fedorahosted.beaker.model.Result;
-import org.fedorahosted.beaker.model.Task;
 import org.junit.Test;
 
 public class JobTest {

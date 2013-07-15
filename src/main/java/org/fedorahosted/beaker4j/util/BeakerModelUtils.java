@@ -1,12 +1,12 @@
-package org.fedorahosted.beaker.util;
+package org.fedorahosted.beaker4j.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fedorahosted.beaker.model.Job;
-import org.fedorahosted.beaker.model.Recipe;
-import org.fedorahosted.beaker.model.RecipeSet;
-import org.fedorahosted.beaker.model.Task;
+import org.fedorahosted.beaker4j.model.Job;
+import org.fedorahosted.beaker4j.model.Recipe;
+import org.fedorahosted.beaker4j.model.RecipeSet;
+import org.fedorahosted.beaker4j.model.Task;
 
 public class BeakerModelUtils {
 

@@ -1,4 +1,4 @@
-package org.fedorahosted.beaker.client;
+package org.fedorahosted.beaker4j.client;
 
 public interface BeakerClientFactory {
 	

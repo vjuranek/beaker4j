@@ -1,8 +1,8 @@
-package org.fedorahosted.beaker.remote_model;
+package org.fedorahosted.beaker4j.remote_model;
 
 import org.apache.xmlrpc.XmlRpcException;
-import org.fedorahosted.beaker.client.BeakerClient;
-import org.fedorahosted.beaker.xmlrpc.client.XmlRpcApi;
+import org.fedorahosted.beaker4j.client.BeakerClient;
+import org.fedorahosted.beaker4j.xmlrpc.client.XmlRpcApi;
 
 public class Watchdog extends RemoteBeakerObject {
     

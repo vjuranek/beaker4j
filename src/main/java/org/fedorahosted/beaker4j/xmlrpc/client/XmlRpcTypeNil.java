@@ -1,4 +1,4 @@
-package org.fedorahosted.beaker.xmlrpc.client;
+package org.fedorahosted.beaker4j.xmlrpc.client;
 
 import org.apache.ws.commons.util.NamespaceContextImpl;
 import org.apache.xmlrpc.common.TypeFactoryImpl;

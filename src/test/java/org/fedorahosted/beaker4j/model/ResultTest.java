@@ -1,4 +1,4 @@
-package org.fedorahosted.beaker.model;
+package org.fedorahosted.beaker4j.model;
 
 import static org.junit.Assert.assertEquals;
 
@@ -9,8 +9,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.fedorahosted.beaker.model.Result;
-import org.fedorahosted.beaker.remote_model.TaskResult;
+import org.fedorahosted.beaker4j.model.Result;
+import org.fedorahosted.beaker4j.remote_model.TaskResult;
 import org.junit.Test;
 
 public class ResultTest {

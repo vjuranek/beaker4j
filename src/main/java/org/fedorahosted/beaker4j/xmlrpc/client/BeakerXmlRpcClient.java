@@ -1,8 +1,8 @@
-package org.fedorahosted.beaker.xmlrpc.client;
+package org.fedorahosted.beaker4j.xmlrpc.client;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
-import org.fedorahosted.beaker.client.BeakerClient;
+import org.fedorahosted.beaker4j.client.BeakerClient;
 
 
 public class BeakerXmlRpcClient implements BeakerClient {
