@@ -12,8 +12,7 @@ import org.fedorahosted.beaker4j.client.BeakerClientFactory;
 
 
 public class BeakerXmlRpcClientFactory implements BeakerClientFactory {
-
-	//private static final String PROTOCOL = "https://";
+    
 	private static final String RPC_PATH = "/RPC2";
 	
 	private final String server;
