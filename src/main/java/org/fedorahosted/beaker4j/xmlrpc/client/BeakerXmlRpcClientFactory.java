@@ -29,7 +29,11 @@ public class BeakerXmlRpcClientFactory implements BeakerClientFactory {
 		return client;
 	}
 
-	private BeakerClient createClient(String server) {
+	public static BeakerClient getClient(String server) {
+	    return createClient(server);
+	}
+	
+	private static BeakerClient createClient(String server) {
 		XmlRpcClient client = new XmlRpcClient(); 
 		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 		client.setTypeFactory(new XmlRpcTypeNil(client)); // allow nil return by python
