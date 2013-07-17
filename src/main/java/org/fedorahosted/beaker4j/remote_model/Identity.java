@@ -56,13 +56,7 @@ public class Identity extends RemoteBeakerObject {
     }
 
     public boolean authenticate(String login, String passwd) {
-        try {
-            @SuppressWarnings("unchecked")
-            HashMap<String, ?> o = (HashMap<String, ?>) callOnBeaker(XmlRpcApi.AUTH_LOGIN_PASSWORD, new Object[] {login, passwd});
-        } catch(XmlRpcException e){
-            return false;
-        }
-        return true;
+        return beakerClient.authenticate(login, passwd);
     }
     
     public String whoAmI() {

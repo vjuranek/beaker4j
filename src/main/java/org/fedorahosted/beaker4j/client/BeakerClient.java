@@ -6,6 +6,7 @@ import org.fedorahosted.beaker4j.xmlrpc.client.XmlRpcApi;
 
 public interface BeakerClient {
     
+    public boolean authenticate(String login, String password);
     public BeakerJob scheduleJob(String jobXml);
     
     public Object execute(XmlRpcApi rpcApi, Object[] params) throws XmlRpcException;
