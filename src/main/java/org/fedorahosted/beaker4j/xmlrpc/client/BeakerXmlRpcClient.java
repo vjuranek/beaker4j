@@ -3,6 +3,7 @@ package org.fedorahosted.beaker4j.xmlrpc.client;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.fedorahosted.beaker4j.client.BeakerClient;
+import org.fedorahosted.beaker4j.remote_model.BeakerJob;
 
 
 public class BeakerXmlRpcClient implements BeakerClient {
@@ -13,6 +14,20 @@ public class BeakerXmlRpcClient implements BeakerClient {
         this.client = client;
     }
 
+    @Override
+    public BeakerJob scheduleJob(String jobXml) {
+        Object[] params = new Object[] { jobXml };
+        BeakerJob job = null;
+        try {
+            String jobId = (String)execute(XmlRpcApi.JOBS_UPLOAD, params);
+            job = new BeakerJob(jobId, this);
+        } catch(XmlRpcException e) {
+            //TODO log exception properly
+            e.printStackTrace();
+        }
+        return job;
+    }
+    
     @Override
     public Object execute(String cmd, Object[] params) throws XmlRpcException {
         return doRPCall(cmd, params);
