@@ -82,8 +82,8 @@ public class BeakerTask extends RemoteBeakerObject {
             this.isFailed = (Boolean)taskInfo.get(FAILED_FIELD);
             this.isFinished = (Boolean)taskInfo.get(FINISHED_FIELD);
             this.stateLabel = (String)taskInfo.get(LABEL_FIELD);
-            this.state = TaskStatus.valueOf((String)taskInfo.get(STATE_FIELD));
-            this.result = TaskResult.valueOf((String)taskInfo.get(RESULT_FIELD));
+            this.state = TaskStatus.valueOf(((String)taskInfo.get(STATE_FIELD)).toUpperCase());
+            this.result = TaskResult.valueOf(((String)taskInfo.get(RESULT_FIELD)).toUpperCase());
             this.worker = new Worker((Map<String,String>)taskInfo.get(WORKER_FIELD));
         }
 
