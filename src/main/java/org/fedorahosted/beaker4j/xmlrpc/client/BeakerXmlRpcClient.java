@@ -27,7 +27,7 @@ public class BeakerXmlRpcClient implements BeakerClient {
     }
     
     @Override
-    public BeakerJob scheduleJob(String jobXml) {
+    public BeakerJob scheduleJob(String jobXml) throws XmlRpcException {
         Object[] params = new Object[] { jobXml };
         BeakerJob job = null;
         try {
