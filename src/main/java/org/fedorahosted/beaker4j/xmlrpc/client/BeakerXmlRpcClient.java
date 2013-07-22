@@ -30,13 +30,8 @@ public class BeakerXmlRpcClient implements BeakerClient {
     public BeakerJob scheduleJob(String jobXml) throws XmlRpcException {
         Object[] params = new Object[] { jobXml };
         BeakerJob job = null;
-        try {
-            String jobId = (String)execute(XmlRpcApi.JOBS_UPLOAD, params);
-            job = new BeakerJob(jobId, this);
-        } catch(XmlRpcException e) {
-            //TODO log exception properly
-            e.printStackTrace();
-        }
+        String jobId = (String)execute(XmlRpcApi.JOBS_UPLOAD, params);
+        job = new BeakerJob(jobId, this);
         return job;
     }
     
