@@ -13,6 +13,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <scm>
+        <connection>scm:git:git://github.com/vjuranek/${project.artifctId}.git</connection>
+        <developerConnection>scm:git:git@github.com:vjuranek/${project.artifactId}.git</developerConnection>
+        <url>http://github.com/vjuranek/${project.artifactId}</url>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
