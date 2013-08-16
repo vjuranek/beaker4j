@@ -1,7 +1,5 @@
 package org.fedorahosted.beaker4j.xmlrpc.client;
 
-import java.util.HashMap;
-
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.fedorahosted.beaker4j.client.BeakerClient;
@@ -18,8 +16,9 @@ public class BeakerXmlRpcClient implements BeakerClient {
 
     public boolean authenticate(String login, String password) {
         try {
-            @SuppressWarnings("unchecked")
-            HashMap<String, ?> o = (HashMap<String, ?>) execute(XmlRpcApi.AUTH_LOGIN_PASSWORD, new Object[] {login, password});
+            String o = (String) execute(XmlRpcApi.AUTH_LOGIN_PASSWORD, new Object[] {login, password});
+            if(o==null || o.trim().equals(""))
+                return false;
         } catch(XmlRpcException e){
             return false;
         }
