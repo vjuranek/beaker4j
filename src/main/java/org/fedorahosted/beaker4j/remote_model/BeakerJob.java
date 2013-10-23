@@ -52,7 +52,6 @@ public class BeakerJob extends RemoteBeakerObject {
     
     public ArrayList<Map<String, String>> getFiles()  throws XmlRpcException {
         Object[] results = (Object[])callOnBeaker(XmlRpcApi.TASKACTIONS_FILES, new Object[] {jobId});
-        System.out.println("Beaker4j files: " + results[0].getClass().getCanonicalName());
         ArrayList<Map<String,String>> resp = new ArrayList<Map<String,String>>();
         for(Object o : results)
             if(o instanceof Map) {
