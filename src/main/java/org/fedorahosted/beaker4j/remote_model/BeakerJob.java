@@ -2,6 +2,8 @@ package org.fedorahosted.beaker4j.remote_model;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -46,6 +48,17 @@ public class BeakerJob extends RemoteBeakerObject {
         String jobStr = resp.substring(beg, end);
         String xml = jobStr.replace("\\\"", "\"");
         return xml;
+    }
+    
+    public ArrayList<Map<String, String>> getFiles()  throws XmlRpcException {
+        Object[] results = (Object[])callOnBeaker(XmlRpcApi.TASKACTIONS_FILES, new Object[] {jobId});
+        System.out.println("Beaker4j files: " + results[0].getClass().getCanonicalName());
+        ArrayList<Map<String,String>> resp = new ArrayList<Map<String,String>>();
+        for(Object o : results)
+            if(o instanceof Map) {
+                resp.add((Map)o);
+            }
+        return resp;
     }
     
     public void cancel(String message) throws XmlRpcException {

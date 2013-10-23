@@ -18,6 +18,7 @@ public enum XmlRpcApi {
 	JOBS_UPLOAD("jobs.upload"),
 	RECIPES_TASKS_EXTEND("recipes.tasks.extend"),
 	RECIPES_TASKS_WATCHDOG("recipes.tasks.watchdog"),
+	TASKACTIONS_FILES("taskactions.files"),
 	TASKACTIONS_TASK_INFO("taskactions.task_info"),
 	TASKACTIONS_TO_XML("taskactions.to_xml");
 	
