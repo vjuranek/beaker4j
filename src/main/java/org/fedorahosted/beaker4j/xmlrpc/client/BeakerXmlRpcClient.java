@@ -16,13 +16,11 @@ public class BeakerXmlRpcClient implements BeakerClient {
 
     public boolean authenticate(String login, String password) {
         try {
-            String o = (String) execute(XmlRpcApi.AUTH_LOGIN_PASSWORD, new Object[] {login, password});
-            if(o==null)
-                return true;
+            execute(XmlRpcApi.AUTH_LOGIN_PASSWORD, new Object[] {login, password});
         } catch(XmlRpcException e){
             return false;
         }
-        return false;
+        return true;
     }
     
     @Override
