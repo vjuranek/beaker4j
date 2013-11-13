@@ -3,7 +3,7 @@
 
     <groupId>org.fedorahosted.beaker4j</groupId>
     <artifactId>beaker4j</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>beaker4j</name>
