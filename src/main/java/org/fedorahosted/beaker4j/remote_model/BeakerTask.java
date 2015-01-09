@@ -21,7 +21,6 @@ public class BeakerTask extends RemoteBeakerObject {
     }
     
     public TaskInfo getInfo() throws XmlRpcException {
-        System.out.println("taksId je " + taskId);
         @SuppressWarnings("unchecked")
         Map<String,?>taskInfo = (Map<String,?>)callOnBeaker(XmlRpcApi.TASKACTIONS_TASK_INFO, new Object[] {taskId});
         return new TaskInfo(taskInfo);
@@ -34,7 +33,6 @@ public class BeakerTask extends RemoteBeakerObject {
     
     public int extend(int extendTime) throws XmlRpcException {
         Integer id = getTaskIdAsInt();
-        System.out.println("Extendsing time for " + taskId);
         //TODO need a check if task is running
         return (Integer)callOnBeaker(XmlRpcApi.RECIPES_TASKS_EXTEND, new Object[] {id, extendTime});
     }

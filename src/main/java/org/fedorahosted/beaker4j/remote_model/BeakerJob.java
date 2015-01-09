@@ -61,7 +61,6 @@ public class BeakerJob extends RemoteBeakerObject {
     }
     
     public void cancel(String message) throws XmlRpcException {
-        System.out.println("jobId je " + jobId);
         callOnBeaker(XmlRpcApi.JOBS_STOP, new Object[] {getJobNumber(), StopType.cancel.toString(), message});
     }
     
