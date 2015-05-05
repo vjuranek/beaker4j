@@ -38,6 +38,7 @@
         <version.junit>4.10</version.junit>
         <version.plugins.gpg>1.5</version.plugins.gpg>
         <version.plugins.jaxb2>1.5</version.plugins.jaxb2>
+        <version.plugins.nexus-staging>1.6.3</version.plugins.nexus-staging>
     </properties>
 
     <dependencies>
@@ -105,7 +106,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.3</version>
+                <version>${version.plugins.nexus-staging}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
