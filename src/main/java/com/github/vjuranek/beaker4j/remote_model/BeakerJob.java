@@ -60,13 +60,12 @@ public class BeakerJob extends RemoteBeakerObject {
             }
         return resp;
     }
-    
+
     public void cancel(String message) throws XmlRpcException {
         callOnBeaker(XmlRpcApi.JOBS_STOP, new Object[] {getJobNumber(), StopType.cancel.toString(), message});
     }
-    
-    
-    private Integer getJobNumber() {
+
+    public Integer getJobNumber() {
         Integer jobIdNum;
         if(jobId.startsWith("J:")) {
             jobIdNum = new Integer(jobId.substring(2, jobId.length()));
@@ -75,7 +74,11 @@ public class BeakerJob extends RemoteBeakerObject {
         }
         return jobIdNum;
     }
-    
+
+    public BeakerTask getBeakerTask() {
+        return new BeakerTask(jobId, beakerClient);
+    }
+
     public enum StopType {
         abort,
         cancel;
