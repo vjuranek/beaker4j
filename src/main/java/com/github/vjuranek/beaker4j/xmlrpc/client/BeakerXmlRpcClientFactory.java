@@ -44,7 +44,7 @@ public class BeakerXmlRpcClientFactory implements BeakerClientFactory {
 			config.setServerURL(new URL(server + RPC_PATH));
 			config.setEnabledForExtensions(true); // we need this because of nil return by python (allowed in beaker) ?? not really, this is ext:nil, not nil
 		} catch (MalformedURLException e) {
-			//LOGGER.severe(e.getMessage());
+			throw new IllegalArgumentException("Invalid server URL: " + server + RPC_PATH, e);
 		}
 		client.setConfig(config);
 		
@@ -56,5 +56,4 @@ public class BeakerXmlRpcClientFactory implements BeakerClientFactory {
 		
 		return new BeakerXmlRpcClient(client);
 	}
-
 }

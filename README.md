@@ -14,8 +14,7 @@ To include Beaker4j into you project, add following dependency to your `pom.xml`
 Simple example how to use the Beaker client in your app could be as follows:
 ```java
 BeakerClient beakerClient = BeakerServer.getXmlRpcClient(beakerURL);
-Identity identity = new Identity(login, password, beakerClient);
-identity.authenticate();
+Identity identity = beakerClient.authenticate(new Identity(login, password));
 BeakerJob job = beakerClient.scheduleJob(jobXml);
 String jobId = job.getJobId();
 ```

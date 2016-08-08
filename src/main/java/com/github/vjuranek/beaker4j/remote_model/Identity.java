@@ -12,7 +12,6 @@ import com.github.vjuranek.beaker4j.xmlrpc.client.XmlRpcApi;
  * User identity.
  * 
  * @author vjuranek
- *
  */
 public class Identity extends RemoteBeakerObject {
 
@@ -51,13 +50,25 @@ public class Identity extends RemoteBeakerObject {
     public String getPasswd() {
         return passwd;
     }
-    
+
+    @Deprecated /** Use {@link BeakerClient#authenticate(Identity identity)} instead. */
     public boolean authenticate() {
-        return authenticate(login, passwd);
+        try {
+            beakerClient.authenticate(this);
+        } catch (XmlRpcException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
+    @Deprecated /** Use {@link BeakerClient#authenticate(Identity identity)} instead. */
     public boolean authenticate(String login, String passwd) {
-        return beakerClient.authenticate(login, passwd);
+        try {
+            beakerClient.authenticate(new Identity(login, passwd));
+        } catch (XmlRpcException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
     
     public String whoAmI() {

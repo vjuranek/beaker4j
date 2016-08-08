@@ -1,5 +1,6 @@
 package com.github.vjuranek.beaker4j.xmlrpc.client;
 
+import com.github.vjuranek.beaker4j.remote_model.Identity;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 
@@ -15,6 +16,15 @@ public class BeakerXmlRpcClient implements BeakerClient {
         this.client = client;
     }
 
+    public Identity authenticate(Identity identity) throws XmlRpcException {
+        execute(XmlRpcApi.AUTH_LOGIN_PASSWORD, new Object[] {
+            identity.getLogin(),
+            identity.getPasswd()
+        });
+        return new Identity(identity.getLogin(), identity.getPasswd(), this);
+    }
+
+    @Deprecated /** Use {@link #authenticate(Identity identity)} instead. */
     public boolean authenticate(String login, String password) {
         try {
             execute(XmlRpcApi.AUTH_LOGIN_PASSWORD, new Object[] {login, password});
@@ -27,10 +37,8 @@ public class BeakerXmlRpcClient implements BeakerClient {
     @Override
     public BeakerJob scheduleJob(String jobXml) throws XmlRpcException {
         Object[] params = new Object[] { jobXml };
-        BeakerJob job = null;
         String jobId = (String)execute(XmlRpcApi.JOBS_UPLOAD, params);
-        job = new BeakerJob(jobId, this);
-        return job;
+        return new BeakerJob(jobId, this);
     }
     
     @Override
