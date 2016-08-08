@@ -42,7 +42,6 @@ public class BeakerJob extends RemoteBeakerObject {
     }
     
     public String getJobXml() throws XmlRpcException {
-        @SuppressWarnings("unchecked")
         String resp = (String)callOnBeaker(XmlRpcApi.JOBS_TO_XML, new Object[] {getJobNumber()});
         int beg = resp.indexOf("<job");
         int end = resp.indexOf("</job>") + 6;
@@ -51,6 +50,7 @@ public class BeakerJob extends RemoteBeakerObject {
         return xml;
     }
     
+    @SuppressWarnings("unchecked")
     public ArrayList<Map<String, String>> getFiles()  throws XmlRpcException {
         Object[] results = (Object[])callOnBeaker(XmlRpcApi.TASKACTIONS_FILES, new Object[] {jobId});
         ArrayList<Map<String,String>> resp = new ArrayList<Map<String,String>>();

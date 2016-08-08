@@ -71,10 +71,10 @@ public class Identity extends RemoteBeakerObject {
         return true;
     }
     
+    @SuppressWarnings("unchecked")
     public String whoAmI() {
         Map<String,String> me = new HashMap<String,String>(); 
         try{
-            //@SuppressWarnings("unchecked")
             me = (Map<String,String>)callOnBeaker(XmlRpcApi.AUTH_WHO_AM_I, new Object[] {});
         } catch(XmlRpcException e) {
             if(e.getMessage().contains("Please log in first")) {
