@@ -3,7 +3,7 @@
 
     <groupId>com.github.vjuranek.beaker4j</groupId>
     <artifactId>beaker4j</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>beaker4j</name>
@@ -28,7 +28,7 @@
         <connection>scm:git:git://github.com/vjuranek/${project.artifctId}.git</connection>
         <developerConnection>scm:git:git@github.com:vjuranek/${project.artifactId}.git</developerConnection>
         <url>http://github.com/vjuranek/${project.artifactId}</url>
-        <tag>beaker4j-1.0.6</tag>
+        <tag>beaker4j-1.0.3</tag>
     </scm>
 
     <properties>
