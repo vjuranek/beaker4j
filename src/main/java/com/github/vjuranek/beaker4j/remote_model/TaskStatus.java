@@ -28,7 +28,7 @@ public enum TaskStatus {
         try {
             return valueOf(s);
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(TaskStatus.class.getName()).log(Level.SEVERE, "Unable to parse TaskStatus from " + s);
+            Logger.getLogger(TaskStatus.class.getName()).log(Level.SEVERE, "Unable to parse TaskStatus from " + s, ex);
         }
         return UNKNOWN;
     }

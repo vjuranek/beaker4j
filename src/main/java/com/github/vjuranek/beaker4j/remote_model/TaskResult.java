@@ -22,7 +22,7 @@ public enum TaskResult {
         try {
             return valueOf(s);
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(TaskStatus.class.getName()).log(Level.SEVERE, "Unable to parse TaskResult from " + s);
+            Logger.getLogger(TaskStatus.class.getName()).log(Level.SEVERE, "Unable to parse TaskResult from " + s, ex);
         }
         return UNKNOWN;
     }
