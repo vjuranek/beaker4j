@@ -1,10 +1,12 @@
 package com.github.vjuranek.beaker4j.remote_model;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
- * See TaskResult class in <a href="https://github.com/beaker-project/beaker/blob/develop/Server/bkr/server/model.py">model.py</a>
- * @see <a href="https://github.com/beaker-project/beaker/blob/develop/Server/bkr/server/model.py">model.py</a>
- * @author vjuranek
+ * Result of a Beaker task.
  *
+ * @see <a href="https://github.com/beaker-project/beaker/blob/master/Server/bkr/server/model/types.py">https://github.com/beaker-project/beaker/blob/master/Server/bkr/server/model/types.py</a>
  */
 public enum TaskResult {
     
@@ -13,6 +15,15 @@ public enum TaskResult {
     WARN,
     FAIL,
     PANIC,
-    NONE;
-    
+    NONE,
+    UNKNOWN; // Client failed to understand the status
+
+    public static TaskResult fromString(String s) {
+        try {
+            return valueOf(s);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(TaskStatus.class.getName()).log(Level.SEVERE, "Unable to parse TaskResult from " + s);
+        }
+        return UNKNOWN;
+    }
 }

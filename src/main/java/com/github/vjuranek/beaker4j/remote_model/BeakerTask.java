@@ -81,8 +81,8 @@ public class BeakerTask extends RemoteBeakerObject {
             this.isFailed = (Boolean)taskInfo.get(FAILED_FIELD);
             this.isFinished = (Boolean)taskInfo.get(FINISHED_FIELD);
             this.stateLabel = (String)taskInfo.get(LABEL_FIELD);
-            this.state = TaskStatus.valueOf(((String)taskInfo.get(STATE_FIELD)).toUpperCase());
-            this.result = TaskResult.valueOf(((String)taskInfo.get(RESULT_FIELD)).toUpperCase());
+            this.state = TaskStatus.fromString(((String)taskInfo.get(STATE_FIELD)).toUpperCase());
+            this.result = TaskResult.fromString(((String)taskInfo.get(RESULT_FIELD)).toUpperCase());
             //TODO check for null - NPE: at org.fedorahosted.beaker4j.remote_model.BeakerTask$Worker.<init>(BeakerTask.java:188)
             //this.worker = new Worker((Map<String,String>)taskInfo.get(WORKER_FIELD)); 
         }
